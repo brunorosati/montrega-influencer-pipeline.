@@ -1,0 +1,127 @@
+{
+  "name": "Montrega LLM Chain",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "authentication": "airtableTokenApi",
+        "baseId": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_BASE_URL",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "YOUR_AIRTABLE_TABLE_URL",
+          "mode": "url"
+        },
+        "triggerField": "Status",
+        "additionalFields": {
+          "viewId": "Queue"
+        }
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "id": "30e7704d-55bd-4b4e-99e6-fea087448168",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are writing a short, casual email on behalf of Montrega, a D2C fragrance brand based in India. The message is to a potential nano-influencer or micro-influencer we want to collaborate with.\n\nHere is what we know about them:\n- Instagram handle: {{ $json.fields.Username }}\n- Full name: {{ $json.fields[\"Full name\"] }}\n- Bio: {{ $json.fields.Bio }}\n- Followers: {{ $json.fields.Followers }}\n\nRules:\n1. Keep it under 60 words.\n2. Reference something specific from their bio or content style — never send a generic \"love your content\" message.\n3. Mention Montrega by name. Say we're a skin-adaptive fragrance brand.\n4. The ask: would they be open to trying the product and sharing honest thoughts? No payment offer. No pressure.\n5. Tone: casual, direct, human. Not corporate. Not desperate. Like a founder DM, not a brand pitch.\n6. Do NOT use emojis excessively. Max 1 emoji, or zero.\n7. Sign off as \"Bruno, Montrega\".\n\nOutput ONLY the DM text. No explanations, no preamble, no quotes around it.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [416, 0],
+      "id": "2a9845e0-cb98-45af-a599-dbb448ecb78b",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-haiku-4-5-20251001",
+          "mode": "list",
+          "cachedResultName": "Claude Haiku 4.5"
+        },
+        "options": {
+          "maxTokensToSample": 200,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [144, 208],
+      "id": "9e1f371f-2c2d-4561-80d2-baf47bbcafe0",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "YOUR_ANTHROPIC_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "https://api.airtable.com/v0/YOUR_AIRTABLE_BASE_ID/Montrega",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "records",
+              "value": "={{ [{ \"id\": $('Airtable Trigger').item.json.id, \"fields\": { \"Generated Message\": $('Basic LLM Chain').item.json.text, \"Status\": \"Ready to Send\" } }] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [768, 0],
+      "id": "6badbb87-5633-40f2-91ea-1b419edc069b",
+      "name": "HTTP Request",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YOUR_AIRTABLE_CREDENTIAL_ID",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [[{ "node": "Basic LLM Chain", "type": "main", "index": 0 }]]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [[{ "node": "Basic LLM Chain", "type": "ai_languageModel", "index": 0 }]]
+    },
+    "Basic LLM Chain": {
+      "main": [[{ "node": "HTTP Request", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
