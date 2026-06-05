@@ -93,9 +93,9 @@ New → Qualified → Ready to Send → Sent → Replied → Converted / Rejecte
 | View | Filter | Purpose | Connected workflow |
 |---|---|---|---|
 | **Inbox** | `Status` = `New` | Newly scraped leads awaiting manual review and niche classification | None — manual processing |
-| **Queue** | `Qualified` = `✓` AND `Status` = `Qualified` | Qualified leads waiting for AI message generation | `workflow_enrichment.json` |
+| **Queue** | `Qualified` = `✓` AND `Status` = `Qualified` | Qualified leads waiting for AI message generation | `montrega-llm-chain.json` |
 | **Review** | `Status` = `Ready to Send` | Generated messages awaiting human approval before send | None — manual review gate |
-| **Ready to Send** | `Official Business Email` is not empty AND `Status` = `Ready to Send` | Approved messages with a valid delivery address | `workflow_sending.json` |
+| **Ready to Send** | `Official Business Email` is not empty AND `Status` = `Ready to Send` | Approved messages with a valid delivery address | `Montrega Sending.json` |
 
 ---
 
@@ -105,9 +105,9 @@ New → Qualified → Ready to Send → Sent → Replied → Converted / Rejecte
 Apify scrape
   → Airtable import (Status: New)
     → Manual niche tagging (Status: Qualified)
-      → [workflow_enrichment.json] Claude generates message (Status: Ready to Send)
+      → [montrega-llm-chain.json] Claude generates message (Status: Ready to Send)
         → Human reviews message in Review view
-          → [workflow_sending.json] Gmail sends email (Status: Sent)
+          → [Montrega Sending.json.json] Gmail sends email (Status: Sent)
             → Manual reply tracking (Status: Replied → Outcome logged)
 ```
 
