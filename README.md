@@ -23,6 +23,17 @@ Pipeline reduces per-message time from approximately
 18 minutes (manual) to approximately 8 seconds 
 (automated generation + 10s human review).
 
+## Pipeline Status Flow
+
+| Status | Trigger | What Happens Next |
+|---|---|---|
+| New | Record imported from Apify | Manual niche tagging |
+| Qualified | Passed qualification formula | LLM workflow generates personalized message |
+| Ready to Send | LLM writes Generated Message | Human review before send |
+| Sent | Sending workflow dispatches email | Awaiting reply |
+| Replied | Manual status update | Log Date Replied, set Outcome |
+| Converted / Rejected / Skip | Final outcome logged | Terminal state |
+
 ## Architecture
 
 ![Architecture](architecture.png)
