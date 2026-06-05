@@ -1,0 +1,21 @@
+# Environment variables
+.env
+.env.local
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# n8n exports that may contain live credentials
+# (only commit sanitized versions)
+*_raw.json
+*_export.json
+
+# Any local notes with real data
+*_private.*
+scratch.*
