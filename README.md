@@ -25,7 +25,7 @@ Pipeline reduces per-message time from approximately
 
 ## Architecture
 
-[insert architecture.png]
+![Architecture](architecture.png)
 
 Three n8n workflows running on a self-hosted n8n 
 instance on Railway:
