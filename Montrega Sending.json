@@ -1,0 +1,452 @@
+Montrega Sending
+{
+"name": "Influencer Outreach Automation",
+"nodes": [
+{
+"parameters": {
+"pollTimes": {
+"item": [
+{
+"mode": "everyX",
+"value": 5,
+"unit": "minutes"
+}
+]
+},
+"authentication": "airtableTokenApi",
+"baseId": {
+"__rl": true,
+"value": "https://airtable.com/appXXXXXXXXXXXXXX/",
+"mode": "url"
+},
+"tableId": {
+"__rl": true,
+"value": "https://airtable.com/appXXXXXXXXXXXXXX/tblXXXXXXXXXXXXXX/viwXXXXXXXXXXXXXX",
+"mode": "url"
+},
+"triggerField": "Status",
+"additionalFields": {
+"viewId": "Ready to Send"
+}
+},
+"type": "n8n-nodes-base.airtableTrigger",
+"typeVersion": 1,
+"position": [
+64,
+-48
+],
+"id": "b4f74a8d-0000-0000-0000-000000000001",
+"name": "Airtable Trigger",
+"credentials": {
+"airtableTokenApi": {
+"id": "YOUR_CREDENTIAL_ID",
+"name": "Airtable Personal Access Token"
+}
+}
+},
+{
+"parameters": {
+"sendTo": "={{ $json.fields["Official Business Email"] }}",
+"subject": "Collaboration Opportunity",
+"message": "={{ $json.fields["Generated Message"] }}",
+"options": {}
+},
+"type": "n8n-nodes-base.gmail",
+"typeVersion": 2.2,
+"position": [
+240,
+-48
+],
+"id": "84862a7e-0000-0000-0000-000000000002",
+"name": "Send a message",
+"webhookId": "00000000-0000-0000-0000-000000000000",
+"credentials": {
+"gmailOAuth2": {
+"id": "YOUR_CREDENTIAL_ID",
+"name": "Gmail account"
+}
+}
+},
+{
+"parameters": {
+"operation": "update",
+"base": {
+"__rl": true,
+"value": "appXXXXXXXXXXXXXX",
+"mode": "list",
+"cachedResultName": "Influencer Pipeline",
+"cachedResultUrl": "https://airtable.com/appXXXXXXXXXXXXXX"
+},
+"table": {
+"__rl": true,
+"value": "tblXXXXXXXXXXXXXX",
+"mode": "list",
+"cachedResultName": "Contacts",
+"cachedResultUrl": "https://airtable.com/appXXXXXXXXXXXXXX/tblXXXXXXXXXXXXXX"
+},
+"columns": {
+"mappingMode": "defineBelow",
+"value": {
+"Status": "Sent",
+"id": "={{ $('Airtable Trigger').item.json.id }}",
+"Date Sent": "={{ $now.toISO() }}"
+},
+"matchingColumns": [
+"id"
+],
+"schema": [
+{
+"id": "id",
+"displayName": "id",
+"required": false,
+"defaultMatch": true,
+"display": true,
+"type": "string",
+"readOnly": true,
+"removed": false
+},
+{
+"id": "Username",
+"displayName": "Username",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Profile URL",
+"displayName": "Profile URL",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Full name",
+"displayName": "Full name",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Bio",
+"displayName": "Bio",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Followers",
+"displayName": "Followers",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "number",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Business email",
+"displayName": "Business email",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Niche",
+"displayName": "Niche",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "options",
+"options": [
+{
+"name": "Fragrance",
+"value": "Fragrance"
+},
+{
+"name": "Lifestyle",
+"value": "Lifestyle"
+},
+{
+"name": "Fashion",
+"value": "Fashion"
+},
+{
+"name": "Skincare",
+"value": "Skincare"
+},
+{
+"name": "Beauty",
+"value": "Beauty"
+},
+{
+"name": "Wellness",
+"value": "Wellness"
+},
+{
+"name": "Other",
+"value": "Other"
+}
+],
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Qualified",
+"displayName": "Qualified",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": true,
+"removed": true
+},
+{
+"id": "Status",
+"displayName": "Status",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "options",
+"options": [
+{
+"name": "New",
+"value": "New"
+},
+{
+"name": "Qualified",
+"value": "Qualified"
+},
+{
+"name": "Ready to Send",
+"value": "Ready to Send"
+},
+{
+"name": "Sent",
+"value": "Sent"
+},
+{
+"name": "Replied",
+"value": "Replied"
+},
+{
+"name": "Converted",
+"value": "Converted"
+},
+{
+"name": "Rejected",
+"value": "Rejected"
+},
+{
+"name": "Skip",
+"value": "Skip"
+}
+],
+"readOnly": false,
+"removed": false
+},
+{
+"id": "Generated Message",
+"displayName": "Generated Message",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Date Added",
+"displayName": "Date Added",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": true,
+"removed": true
+},
+{
+"id": "Date Sent",
+"displayName": "Date Sent",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "dateTime",
+"readOnly": false,
+"removed": false
+},
+{
+"id": "Reply Received",
+"displayName": "Reply Received",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "boolean",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Date Replied",
+"displayName": "Date Replied",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "dateTime",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Days to reply",
+"displayName": "Days to reply",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": true,
+"removed": true
+},
+{
+"id": "Outcome",
+"displayName": "Outcome",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "options",
+"options": [
+{
+"name": "Response",
+"value": "Response"
+},
+{
+"name": "Declined",
+"value": "Declined"
+},
+{
+"name": "Interested",
+"value": "Interested"
+},
+{
+"name": "Collaborated",
+"value": "Collaborated"
+},
+{
+"name": "Lost",
+"value": "Lost"
+}
+],
+"readOnly": false,
+"removed": true
+},
+{
+"id": "Send Now",
+"displayName": "Send Now",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "boolean",
+"readOnly": false,
+"removed": true
+},
+{
+"id": "URL",
+"displayName": "URL",
+"required": false,
+"defaultMatch": false,
+"canBeUsedToMatch": true,
+"display": true,
+"type": "string",
+"readOnly": false,
+"removed": true
+}
+],
+"attemptToConvertTypes": false,
+"convertFieldsToString": false
+},
+"options": {
+"typecast": true
+}
+},
+"type": "n8n-nodes-base.airtable",
+"typeVersion": 2.2,
+"position": [
+400,
+-48
+],
+"id": "c9a51a9f-0000-0000-0000-000000000003",
+"name": "Update record",
+"credentials": {
+"airtableTokenApi": {
+"id": "YOUR_CREDENTIAL_ID",
+"name": "Airtable Personal Access Token"
+}
+}
+}
+],
+"pinData": {},
+"connections": {
+"Airtable Trigger": {
+"main": [
+[
+{
+"node": "Send a message",
+"type": "main",
+"index": 0
+}
+]
+]
+},
+"Send a message": {
+"main": [
+[
+{
+"node": "Update record",
+"type": "main",
+"index": 0
+}
+]
+]
+}
+},
+"active": false,
+"settings": {
+"executionOrder": "v1",
+"binaryMode": "separate"
+},
+"versionId": "00000000-0000-0000-0000-000000000000",
+"meta": {
+"instanceId": "YOUR_INSTANCE_ID"
+},
+"id": "YOUR_WORKFLOW_ID",
+"tags": []
+}
