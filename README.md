@@ -14,7 +14,7 @@ our influencer-led acquisition channel.
 
 ## The Solution
 
-A 3-workflow pipeline that sources, qualifies, 
+A 2-workflow pipeline that sources, qualifies, 
 personalizes, and tracks influencer outreach using 
 off-the-shelf tools and Claude API for the 
 personalization layer.
